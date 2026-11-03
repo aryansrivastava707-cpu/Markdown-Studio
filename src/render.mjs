@@ -1,5 +1,9 @@
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function inline(text){return esc(text).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>');}
+function inline(text){
+ const codeSpans=[];
+ const protectedText=esc(text).replace(/`([^`]+)`/g,(_,code)=>{const token=`\u0000${codeSpans.length}\u0000`;codeSpans.push(`<code>${code}</code>`);return token;});
+ return protectedText.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\u0000(\d+)\u0000/g,(_,index)=>codeSpans[Number(index)]);
+}
 export function renderMarkdown(source){
  const out=[],lines=source.replace(/\r/g,'').split('\n');let para=[],list=false,code=false,codeLines=[];
  const flush=()=>{if(para.length){out.push(`<p>${inline(para.join(' '))}</p>`);para=[];}};
