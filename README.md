@@ -27,6 +27,7 @@ Build a small static site from Markdown notes, with escaped HTML and a simple lo
 ## ✨ Features
 
 - Render a deliberately small subset of Markdown.
+- Preserve inline code spans before applying emphasis formatting.
 - Escape raw HTML in note content.
 - Generate one HTML page per Markdown file plus an index page.
 - Write a JSON search index and browser-side title search script.
